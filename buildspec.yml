@@ -18,4 +18,6 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:latest
 artifacts:
-  files: '**/*'
+  files:
+    - '**/*'
+    - imagedefinitions.json
