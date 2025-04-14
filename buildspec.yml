@@ -17,6 +17,8 @@ phases:
       - echo Pushing Docker image...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:latest
+      - echo Creating imagedefinitions.json file...
+      - printf '[{"name":"user-auth-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files:
     - '**/*'
