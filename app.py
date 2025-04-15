@@ -10,6 +10,7 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -24,6 +25,7 @@ def register():
     db.session.commit()
     return jsonify({'message': 'User registered successfully'}), 201
 
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -32,6 +34,7 @@ def login():
         token = generate_token(user.id)
         return jsonify({'token': token}), 200
     return jsonify({'error': 'Invalid credentials'}), 401
+
 
 @app.route('/profile', methods=['GET'])
 def profile():
@@ -47,5 +50,6 @@ def profile():
     user = User.query.get(user_id)
     return jsonify({'username': user.username}), 200
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
