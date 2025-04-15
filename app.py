@@ -11,6 +11,11 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
+@app.route('/')
+def health():
+    return 'OK', 200
+
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
