@@ -26,11 +26,9 @@ wheels/
 MANIFEST
 
 # Flask specific
-instance/
 *.pyc
 
 # SQLite database files
-*.db
 *.sqlite3
 
 # Flask-Migrate
