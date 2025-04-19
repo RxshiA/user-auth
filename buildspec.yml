@@ -13,7 +13,8 @@ phases:
       - echo Installing Snyk CLI...
       - npm install -g snyk
       - echo Authenticating Snyk...
-      - snyk auth $(aws secretsmanager get-secret-value --secret-id snyk-token --query SecretString --output text)
+      - TOKEN=$(aws secretsmanager get-secret-value --secret-id snyk-token --query SecretString --output text)
+      - snyk auth $TOKEN || { echo "Snyk authentication failed"; exit 1; }
 
   build:
     commands:
