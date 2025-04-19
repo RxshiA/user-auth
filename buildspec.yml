@@ -12,9 +12,10 @@ phases:
       - apt-get install -y nodejs
       - echo Installing Snyk CLI...
       - npm install -g snyk
+      - echo Retrieving Snyk token from Secrets Manager...
+      - export SNYK_TOKEN=$(aws secretsmanager get-secret-value --secret-id snyk-token --query SecretString --output text)
       - echo Authenticating Snyk...
-      - TOKEN=$(aws secretsmanager get-secret-value --secret-id snyk-token --query SecretString --output text)
-      - snyk auth $TOKEN || { echo "Snyk authentication failed"; exit 1; }
+      - snyk auth $SNYK_TOKEN || { echo "Snyk authentication failed"; exit 1; }
 
   build:
     commands:
