@@ -19,10 +19,10 @@ phases:
 
   build:
     commands:
-      - echo Running Snyk scan...
-      - snyk test --severity-threshold=high
       - echo Building Docker image...
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - echo Running Snyk scan on Docker image...
+      - snyk container test $REPOSITORY_URI:$IMAGE_TAG --severity-threshold=high
       - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
 
   post_build:
