@@ -7,8 +7,11 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 643732684371.dkr.ecr.ap-south-1.amazonaws.com
       - REPOSITORY_URI=643732684371.dkr.ecr.ap-south-1.amazonaws.com/user-auth-service
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo Installing Node.js and npm...
+      - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+      - apt-get install -y nodejs
       - echo Installing Snyk CLI...
-      - pip install snyk
+      - npm install -g snyk
       - echo Authenticating Snyk...
       - snyk auth $(aws secretsmanager get-secret-value --secret-id snyk-token --query SecretString --output text)
 
