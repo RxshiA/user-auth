@@ -4,7 +4,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 from app.models import db
-from app.api import register_blueprints
 from config import config_by_name
 
 migrate = Migrate()
@@ -22,10 +21,7 @@ def create_app(config_name='development'):
     migrate.init_app(app, db)
     limiter.init_app(app)
 
+    from app.api import register_blueprints
     register_blueprints(app)
-
-    from app.api.auth_routes import auth_blueprint
-    limiter.limit("5 per minute")(auth_blueprint.route('/login')
-                                  )(auth_blueprint.view_functions['auth.login'])
 
     return app
