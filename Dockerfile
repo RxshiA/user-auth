@@ -1,6 +1,7 @@
 FROM public.ecr.aws/docker/library/python:3.11-slim
 
 RUN apt-get update && \
+    apt-get install -y gcc libpq-dev && \
     apt-get upgrade -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

@@ -3,4 +3,5 @@ Flask-SQLAlchemy==3.0.5
 Flask-Migrate==4.0.4
 PyJWT==2.8.0
 Werkzeug==3.0.6
-zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
+psycopg2-binary==2.9.6
+zipp>=3.19.1
