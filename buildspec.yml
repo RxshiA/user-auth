@@ -16,6 +16,8 @@ phases:
       - export SNYK_TOKEN=$(aws secretsmanager get-secret-value --secret-id snyk-token --query SecretString --output text)
       - echo Authenticating Snyk...
       - snyk auth $SNYK_TOKEN || { echo "Snyk authentication failed"; exit 1; }
+      - echo Retrieving database credentials from Secrets Manager...
+      - export DATABASE_URL=$(aws secretsmanager get-secret-value --secret-id user-auth-db-credentials --query SecretString --output text)
 
   build:
     commands:
