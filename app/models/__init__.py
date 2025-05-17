@@ -1,4 +1,5 @@
-from .user import User
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
+from .user import User
