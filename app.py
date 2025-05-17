@@ -3,9 +3,18 @@ from models import db, User
 from auth import generate_token, verify_token
 from config import Config
 from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 app = Flask(__name__)
 app.config.from_object(Config)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"]
+)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -32,6 +41,7 @@ def register():
 
 
 @app.route('/login', methods=['POST'])
+@limiter.limit("5 per minute")
 def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
@@ -58,35 +68,29 @@ def profile():
 
 @app.route('/update-password', methods=['PUT'])
 def update_password():
-    # Verify user is authenticated
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({'error': 'Token is missing'}), 401
 
-    # Handle both formats: with or without "Bearer" prefix
     if " " in auth_header:
         token = auth_header.split(" ")[1]
     else:
-        token = auth_header  # Use the token directly if no space found
+        token = auth_header 
 
     user_id = verify_token(token)
     if not user_id:
         return jsonify({'error': 'Invalid token'}), 401
 
-    # Get request data
     data = request.get_json()
     if not data.get('current_password') or not data.get('new_password'):
         return jsonify({'error': 'Current password and new password are required'}), 400
 
-    # Find the user and verify current password
     user = User.query.get(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
     if not user.check_password(data['current_password']):
         return jsonify({'error': 'Current password is incorrect'}), 401
-
-    # Update password - using the correct method
     
     user.password_hash = generate_password_hash(data['new_password'])
     db.session.commit()
