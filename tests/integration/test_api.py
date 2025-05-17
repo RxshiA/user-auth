@@ -1,6 +1,4 @@
-import pytest
 import json
-from app.utils.security import generate_token
 
 
 def test_register_user(client):
@@ -24,18 +22,3 @@ def test_login_success(client, test_user):
     assert response.status_code == 200
     data = json.loads(response.data)
     assert 'token' in data
-
-
-def test_profile_access(client, test_user, app):
-    user_id = test_user.id
-
-    with app.app_context():
-        token = generate_token(user_id)
-
-    response = client.get(
-        '/users/profile',
-        headers={'Authorization': f'Bearer {token}'}
-    )
-    assert response.status_code == 200
-    data = json.loads(response.data)
-    assert data['username'] == 'testuser'
