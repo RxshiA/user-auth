@@ -27,8 +27,10 @@ def test_login_success(client, test_user):
 
 
 def test_profile_access(client, test_user, app):
+    user_id = test_user.id
+
     with app.app_context():
-        token = generate_token(test_user.id)
+        token = generate_token(user_id)
 
     response = client.get(
         '/users/profile',
