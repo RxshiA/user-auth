@@ -24,4 +24,8 @@ def create_app(config_name='development'):
 
     register_blueprints(app)
 
+    from app.api.auth_routes import auth_blueprint
+    limiter.limit("5 per minute")(auth_blueprint.route('/login')
+                                  )(auth_blueprint.view_functions['auth.login'])
+
     return app
