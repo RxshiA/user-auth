@@ -15,4 +15,8 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "flask db upgrade && python app.py"]
+ENV PYTHONPATH=/app
+ENV FLASK_APP=wsgi.py
+ENV FLASK_ENV=production
+
+CMD ["sh", "-c", "flask db upgrade && gunicorn --bind 0.0.0.0:5000 wsgi:app"]
